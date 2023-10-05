@@ -10,59 +10,62 @@ public class MeshGen : MonoBehaviour
     Vector3[] vertices; //a vector for each point along the mesh, describes its x and z location and its height/ y location
     int[] triangles;    //the triangles needed for the mesh
 
-    public int Xsize=3;   //width and length for the mesh
-    public int Zsize=3;
+    public int Xsize=10;   //width and length for the mesh
+    public int Zsize=10;
+    public float lacunarity=1.5f;
+    public float persistance=0.5f;
+    public int octaves=3;
 
     // Start is called before the first frame update
     void Start()
     {
         mesh = new Mesh();
-        GetComponent<MeshFilter>().mesh = mesh;
 
+
+        GetComponent<MeshCollider>().convex = false;
         makeMesh();
         clearMesh();
+        GetComponent<MeshFilter>().mesh = mesh;
+        GetComponent<MeshCollider>().sharedMesh = mesh;
+        
 
-    }
-    void Update()
-    {
-       // clearMesh();
     }
 
     void makeMesh()
     {
         vertices = new Vector3[(Xsize) * (Zsize)];
-        triangles = new int[(Xsize-1) * (Zsize-1) * 6];
+        triangles = new int[(Xsize - 1) * (Zsize - 1) * 6];
 
-        for (int i = 0,z=0; z < Zsize; z++)     //loops through z and x, creating the vector for each vertex
+        float[,] NoiseMap = NoiseGen.generateNoise(octaves, persistance, lacunarity, Xsize, Zsize); 
+
+        for (int i = 0, z = 0; z < Zsize; z++)     //loops through z and x, creating the vector for each vertex
         {
             for (int x = 0; x < Xsize; x++)
             {
-                float y = Mathf.PerlinNoise(x * .3f, z * .3f) * 2f;  //create the psudo random height for each vertex
-                vertices[i] = new Vector3(x, 0, z);
-                Debug.Log(z);
+                //create the psudo random height for each vertex
+                
+                vertices[i] = new Vector3(x, NoiseMap[x,z], z);
                 i++;
             }
         }
-        int trianglePart = 0, vertex =0;
-        for (int z=0; z<Zsize-1; z++)
+        int trianglePart = 0, vertex = 0;
+        for (int z = 0; z < Zsize - 1; z++)         //loops for making each triangle required for the mesh
         {
-            for (int x = 0; x < Xsize-1; x++)
+            for (int x = 0; x < Xsize - 1; x++)
             {
-                triangles[trianglePart + 0] = vertex;           //loops for making triangles for the mesh
-                triangles[trianglePart + 1] = vertex + Xsize+1;
+                triangles[trianglePart + 0] = vertex;   
+                triangles[trianglePart + 1] = vertex + Xsize;
                 triangles[trianglePart + 2] = vertex + 1;
                 triangles[trianglePart + 3] = vertex + 1;
-                triangles[trianglePart + 4] = vertex + Xsize+1;
-                triangles[trianglePart + 5] = vertex + Xsize+2;
+                triangles[trianglePart + 4] = vertex + Xsize;
+                triangles[trianglePart + 5] = vertex + Xsize + 1;
                 vertex++;
                 trianglePart += 6;
             }
             vertex++;
         }
-        
-        
-        
     }
+
 
     void clearMesh()
     {
@@ -72,6 +75,5 @@ public class MeshGen : MonoBehaviour
 
         mesh.RecalculateNormals();
     }
-   
     
 }
