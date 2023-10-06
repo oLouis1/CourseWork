@@ -2,58 +2,44 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshFilter))]
-public class MeshGen : MonoBehaviour
 
+public static class MeshGen
 {
-    Mesh mesh;
-    Vector3[] vertices; //a vector for each point along the mesh, describes its x and z location and its height/ y location
-    int[] triangles;    //the triangles needed for the mesh
+    public static Mesh mesh;
+    public static int[] triangles;
+    public static Vector3[] verticies;
 
-    public int Xsize=10;   //width and length for the mesh
-    public int Zsize=10;
-    public float lacunarity=1.5f;
-    public float persistance=0.5f;
-    public int octaves=3;
+  //  public static float lacunarity, persistance;
+   // private static int X, Z, octaves;
 
-    // Start is called before the first frame update
-    void Start()
+    public static Mesh generateMesh(int Xsize, int Zsize, float lacunarity, float persistance, int octaves)
     {
         mesh = new Mesh();
-
-
-        GetComponent<MeshCollider>().convex = false;
-        makeMesh();
-        clearMesh();
-        GetComponent<MeshFilter>().mesh = mesh;
-        GetComponent<MeshCollider>().sharedMesh = mesh;
-        
-
-    }
-
-    void makeMesh()
-    {
-        vertices = new Vector3[(Xsize) * (Zsize)];
+        verticies = new Vector3[(Xsize) * (Zsize)];
         triangles = new int[(Xsize - 1) * (Zsize - 1) * 6];
 
-        float[,] NoiseMap = NoiseGen.generateNoise(octaves, persistance, lacunarity, Xsize, Zsize); 
 
-        for (int i = 0, z = 0; z < Zsize; z++)     //loops through z and x, creating the vector for each vertex
+
+        //--------------------Vertex Generation--------------------
+        float[,] Noise = NoiseGen.generateNoise(octaves, persistance, lacunarity, Xsize, Zsize);
+        int i = 0;
+        for (int z = 0; z < Zsize; z++)
         {
             for (int x = 0; x < Xsize; x++)
             {
-                //create the psudo random height for each vertex
-                
-                vertices[i] = new Vector3(x, NoiseMap[x,z], z);
+                verticies[i] = new Vector3(x, Noise[x, z], z); //creates each vertex for the mesh giving it the current x and z value and the random y noise height
                 i++;
             }
         }
+
+
+        //--------------------Triangle Generation----------------
         int trianglePart = 0, vertex = 0;
-        for (int z = 0; z < Zsize - 1; z++)         //loops for making each triangle required for the mesh
+        for (int z = 0; z < Zsize - 1; z++)         
         {
-            for (int x = 0; x < Xsize - 1; x++)
+            for (int x = 0; x < Xsize - 1; x++)     //loops for making each triangle required for the mesh
             {
-                triangles[trianglePart + 0] = vertex;   
+                triangles[trianglePart + 0] = vertex;
                 triangles[trianglePart + 1] = vertex + Xsize;
                 triangles[trianglePart + 2] = vertex + 1;
                 triangles[trianglePart + 3] = vertex + 1;
@@ -64,16 +50,17 @@ public class MeshGen : MonoBehaviour
             }
             vertex++;
         }
-    }
 
-
-    void clearMesh()
-    {
+        //-----------Creating Mesh-----------
         mesh.Clear();
-        mesh.vertices = vertices;
+        mesh.vertices = verticies;
         mesh.triangles = triangles;
-
         mesh.RecalculateNormals();
+
+        return mesh;
     }
+
+   
+
     
 }
