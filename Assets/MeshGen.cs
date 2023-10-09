@@ -12,7 +12,7 @@ public static class MeshGen
   //  public static float lacunarity, persistance;
    // private static int X, Z, octaves;
 
-    public static Mesh generateMesh(int Xsize, int Zsize, float lacunarity, float persistance, int octaves)
+    public static Mesh generateMesh(int Xsize, int Zsize, float[,] noise,float heightScale)
     {
         mesh = new Mesh();
         verticies = new Vector3[(Xsize) * (Zsize)];
@@ -21,13 +21,33 @@ public static class MeshGen
 
 
         //--------------------Vertex Generation--------------------
-        float[,] Noise = NoiseGen.generateNoise(octaves, persistance, lacunarity, Xsize, Zsize);
+        
         int i = 0;
         for (int z = 0; z < Zsize; z++)
         {
             for (int x = 0; x < Xsize; x++)
             {
-                verticies[i] = new Vector3(x, Noise[x, z], z); //creates each vertex for the mesh giving it the current x and z value and the random y noise height
+                if(noise[x,z] <= 0.3f)//this is so everything below a certain hieght will be flat, to represent water.
+                {
+                    noise[x, z] = 0.3f;
+                }
+                else if (noise[x, z] <= 0.5f)
+                {
+                    noise[x, z] = 0.5f;
+                }
+                else if (noise[x, z] <= 0.65f)
+                {
+                    noise[x, z] = 0.65f;
+                }
+                else if (noise[x, z] < 0.75f)
+                {
+                    noise[x, z] = 0.7f;
+                }
+                if (noise[x,z] >= 0.75f)
+                {
+                    noise[x, z] = 0.75f;
+                }
+                verticies[i] = new Vector3(x, noise[x, z]*heightScale, z); //creates each vertex for the mesh giving it the current x and z value and the random y noise height
                 i++;
             }
         }

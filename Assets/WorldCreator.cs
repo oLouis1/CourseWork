@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class WorldCreator : MonoBehaviour
 {
@@ -13,63 +14,90 @@ public class WorldCreator : MonoBehaviour
     public float worldLacunarity = 1.5f;
     public float worldPersistance = 0.5f;
     public int worldOctaves = 3;
+    public float zoom;
+    public float heightScale;
+    public Renderer textureRenderer;
 
     // Start is called before the first frame update
     void Start()
     {
+
+        makeMap();
+        drawNoise(NoiseGen.generateNoise(Xsize, Zsize, worldLacunarity, worldPersistance, worldOctaves, zoom));
+
+
+    }
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.R))
+        {
+            //drawNoise(NoiseGen.generateNoise(Xsize, Zsize, worldLacunarity, worldPersistance, worldOctaves, zoom));
+            Debug.Log("Test");
+            makeMap();
+        }
+    }
+
+    void drawNoise(float[,] Noise)
+    {
+        int Xsize = Noise.GetLength(0);
+        int Zsize = Noise.GetLength(1);
+
+        Texture2D texture = new Texture2D(Xsize, Zsize);
+
+        Color[] colourMap = new Color[Xsize * Zsize];
+        for (int z = 0; z < Zsize; z++)
+        {
+            for (int x = 0; x < Xsize; x++)
+            {
+                colourMap[z * Xsize + x] = Color.Lerp(Color.black, Color.white, Noise[x, z]);
+            }
+        }
+        texture.SetPixels(colourMap);
+        texture.Apply();
+
+        textureRenderer.sharedMaterial.mainTexture = texture;
+        textureRenderer.transform.localScale = new Vector3(Xsize, 1, Zsize);
+
+    }
+    void makeMap()
+    {
         mesh = new Mesh();
-        mesh = MeshGen.generateMesh(Xsize, Zsize, worldLacunarity, worldPersistance, worldOctaves);
+        float[,] noise = NoiseGen.generateNoise(Xsize, Zsize, worldLacunarity, worldPersistance, worldOctaves, zoom);
+        mesh = MeshGen.generateMesh(Xsize, Zsize, noise, heightScale);
+        transform.localScale = new Vector3(Xsize/10, 1, Zsize/10);
+
+        Texture2D texture = new Texture2D(Xsize, Zsize);
+
+        Color[] colourMap = new Color[Xsize * Zsize];
+        for (int z = 0; z < Zsize; z++)
+        {
+            for (int x = 0; x < Xsize; x++)
+            {
+                if (noise[x, z] <= 0.3f)//this is so everything below a certain hieght will be flat, to represent water.
+                {
+                    colourMap[z * Xsize + x] = Color.blue;
+                }
+                else if (0.3f < noise[x,z] && noise[x, z] <= 0.4f)
+                {
+                    colourMap[z * Xsize + x] = Color.yellow;
+                }
+                else if (0.4f < noise[x,z] && noise[x, z] <= 0.65f)
+                {
+                    colourMap[z * Xsize + x] = Color.green;
+                }
+            }
+        }
+        texture.SetPixels(colourMap);
+        texture.Apply();
+
+        textureRenderer.sharedMaterial.mainTexture = texture;
+        textureRenderer.transform.localScale = new Vector3(Xsize/10, 1, Zsize/10);
 
         GetComponent<MeshCollider>().convex = false;
         GetComponent<MeshFilter>().mesh = mesh;
         GetComponent<MeshCollider>().sharedMesh = mesh;
-
-
     }
 
-    /*void makeMesh()
-    {
-        vertices = new Vector3[(Xsize) * (Zsize)];
-        triangles = new int[(Xsize - 1) * (Zsize - 1) * 6];
-
-        float[,] NoiseMap = NoiseGen.generateNoise(octaves, persistance, lacunarity, Xsize, Zsize);
-
-        for (int i = 0, z = 0; z < Zsize; z++)     //loops through z and x, creating the vector for each vertex
-        {
-            for (int x = 0; x < Xsize; x++)
-            {
-                //create the psudo random height for each vertex
-
-                vertices[i] = new Vector3(x, NoiseMap[x, z], z);
-                i++;
-            }
-        }
-        int trianglePart = 0, vertex = 0;
-        for (int z = 0; z < Zsize - 1; z++)         //loops for making each triangle required for the mesh
-        {
-            for (int x = 0; x < Xsize - 1; x++)
-            {
-                triangles[trianglePart + 0] = vertex;
-                triangles[trianglePart + 1] = vertex + Xsize;
-                triangles[trianglePart + 2] = vertex + 1;
-                triangles[trianglePart + 3] = vertex + 1;
-                triangles[trianglePart + 4] = vertex + Xsize;
-                triangles[trianglePart + 5] = vertex + Xsize + 1;
-                vertex++;
-                trianglePart += 6;
-            }
-            vertex++;
-        }
-    }
-    */
-
-    /* void clearMesh()
-     {
-         mesh.Clear();
-         mesh.vertices = vertices;
-         mesh.triangles = triangles;
-
-         mesh.RecalculateNormals();
-     }*/
+    
 
 }

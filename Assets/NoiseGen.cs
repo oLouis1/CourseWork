@@ -6,14 +6,17 @@ public static class NoiseGen
 {
 
     public static float[,] Noise;
-    public static float[,] generateNoise(int octaves, float persitance, float lacunarity, int xSize, int zSize){
+    public static float[,] generateNoise(int xSize, int zSize, float lacunarity, float persistance, int octaves, float zoom)
+    {
 
         float[,] Noise = new float[xSize,zSize]; 
-        float amplitude=5;
+        float amplitude=1;
         float frequency=1;
         float y=0;
-        Debug.Log(Mathf.PerlinNoise(4.38f, 10.34f));
-        Debug.Log(Mathf.PerlinNoise(10.353f, 12.345f));
+
+
+        float maxVal = float.MinValue;
+        float minVal = float.MaxValue;  //for tracking the max and min values so noise can be normalised.
 
         for (int z=0; z < zSize; z++)
         {
@@ -26,20 +29,38 @@ public static class NoiseGen
 
                 for (int i = 0; i < octaves; i++)   // loops to create each octave
                 {
-                    float Xsample = x/ (Random.Range(0.1f, 50) * frequency);
-                    float Zsample = z/(Random.Range(0.1f,50) * frequency);
+                    
+                    float Xsample = x/ zoom * frequency;
+                    float Zsample = z/ zoom * frequency;
                     
                     
-                    float Ysample = (Mathf.PerlinNoise(Xsample, Zsample)-0.5f) * amplitude *2 ;
-                    Debug.Log(Ysample);
-                    y += Ysample;
+                    float Ysample = (Mathf.PerlinNoise(Xsample, Zsample)-0.5f);
+                    y += Ysample * amplitude;
                     
-                    amplitude *= persitance;
+                    amplitude *= persistance;
                     frequency *= lacunarity;
                 }
+                if(y > maxVal)      //whenver theres a value smaller or greater than the min and max value it sets either min or max to new value
+                {
+                    maxVal = y;
+                }
+                else if(y < minVal)
+                {
+                    minVal = y;
+                }
+
+
                 Noise[x, z] = y;
             } 
         }
+        for (int z=0;z<zSize; z++)      //normalises the noise so all values are between the min a max
+        {
+            for (int x = 0; x < xSize; x++)
+            {
+                Noise[x, z] = Mathf.InverseLerp(minVal, maxVal, Noise[x,z]);
+            }
+        }
+
         return Noise;
 
 
