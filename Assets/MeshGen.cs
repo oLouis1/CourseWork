@@ -31,6 +31,7 @@ public static class MeshGen
                 {
                     noise[x, z] = 0.3f;
                 }
+                /*
                 else if (noise[x, z] <= 0.5f)
                 {
                     noise[x, z] = 0.5f;
@@ -47,6 +48,7 @@ public static class MeshGen
                 {
                     noise[x, z] = 0.75f;
                 }
+                */
                 verticies[i] = new Vector3(x, noise[x, z]*heightScale, z); //creates each vertex for the mesh giving it the current x and z value and the random y noise height
                 i++;
             }

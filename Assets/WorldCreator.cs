@@ -16,14 +16,17 @@ public class WorldCreator : MonoBehaviour
     public int worldOctaves = 3;
     public float zoom;
     public float heightScale;
+    public Vector4[] colourHeights;
+    public Color[] colourMap;
     public Renderer textureRenderer;
+   
 
     // Start is called before the first frame update
     void Start()
     {
 
         makeMap();
-        drawNoise(NoiseGen.generateNoise(Xsize, Zsize, worldLacunarity, worldPersistance, worldOctaves, zoom));
+      
 
 
     }
@@ -31,7 +34,7 @@ public class WorldCreator : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.R))
         {
-            //drawNoise(NoiseGen.generateNoise(Xsize, Zsize, worldLacunarity, worldPersistance, worldOctaves, zoom));
+          
             Debug.Log("Test");
             makeMap();
         }
@@ -44,7 +47,7 @@ public class WorldCreator : MonoBehaviour
 
         Texture2D texture = new Texture2D(Xsize, Zsize);
 
-        Color[] colourMap = new Color[Xsize * Zsize];
+        colourMap = new Color[Xsize * Zsize];
         for (int z = 0; z < Zsize; z++)
         {
             for (int x = 0; x < Xsize; x++)
@@ -68,22 +71,20 @@ public class WorldCreator : MonoBehaviour
 
         Texture2D texture = new Texture2D(Xsize, Zsize);
 
-        Color[] colourMap = new Color[Xsize * Zsize];
+        colourMap = new Color[Xsize * Zsize];
         for (int z = 0; z < Zsize; z++)
         {
             for (int x = 0; x < Xsize; x++)
             {
-                if (noise[x, z] <= 0.3f)//this is so everything below a certain hieght will be flat, to represent water.
+                for (int i = colourHeights.Length-1; i > -1; i--)
                 {
-                    colourMap[z * Xsize + x] = Color.blue;
-                }
-                else if (0.3f < noise[x,z] && noise[x, z] <= 0.4f)
-                {
-                    colourMap[z * Xsize + x] = Color.yellow;
-                }
-                else if (0.4f < noise[x,z] && noise[x, z] <= 0.65f)
-                {
-                    colourMap[z * Xsize + x] = Color.green;
+                    if(noise[x,z] <= colourHeights[i].w)
+                    {
+                        
+                        colourMap[z * Xsize + x] = new Color(colourHeights[i].x, colourHeights[i].y, colourHeights[i].z);
+                        Debug.Log(colourMap[z* Xsize + x]);
+                        
+                    }            
                 }
             }
         }
