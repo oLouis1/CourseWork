@@ -9,21 +9,26 @@ public static class MeshGen
     public static int[] triangles;
     public static Vector3[] verticies;
 
+
+    
+
   //  public static float lacunarity, persistance;
    // private static int X, Z, octaves;
 
     public static Mesh generateMesh(int Xsize, int Zsize, float[,] noise,float heightScale)
     {
         mesh = new Mesh();
-        verticies = new Vector3[(Xsize) * (Zsize)];
+        verticies = new Vector3[Xsize * Zsize];
         triangles = new int[(Xsize - 1) * (Zsize - 1) * 6];
+     
+
 
 
 
         //--------------------Vertex Generation--------------------
-        
-        int i = 0;
-        for (int z = 0; z < Zsize; z++)
+
+
+        for (int i=0 ,z = 0; z < Zsize; z++)
         {
             for (int x = 0; x < Xsize; x++)
             {
@@ -72,6 +77,10 @@ public static class MeshGen
             }
             vertex++;
         }
+
+
+     
+      
 
         //-----------Creating Mesh-----------
         mesh.Clear();
