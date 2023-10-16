@@ -47,6 +47,9 @@ public class WorldCreator : MonoBehaviour
     {
         mesh = new Mesh();
         float[,] noise = NoiseGen.generateNoise(Xsize, Zsize, worldLacunarity, worldPersistance, worldOctaves, zoom);
+
+
+
         mesh = MeshGen.generateMesh(Xsize, Zsize, noise, heightScale);
         transform.localScale = new Vector3(Xsize/10, 1, Zsize/10);
 

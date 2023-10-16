@@ -32,28 +32,6 @@ public static class MeshGen
         {
             for (int x = 0; x < Xsize; x++)
             {
-                if(noise[x,z] <= 0.3f)//this is so everything below a certain hieght will be flat, to represent water.
-                {
-                    noise[x, z] = 0.3f;
-                }
-                /*
-                else if (noise[x, z] <= 0.5f)
-                {
-                    noise[x, z] = 0.5f;
-                }
-                else if (noise[x, z] <= 0.65f)
-                {
-                    noise[x, z] = 0.65f;
-                }
-                else if (noise[x, z] < 0.75f)
-                {
-                    noise[x, z] = 0.7f;
-                }
-                if (noise[x,z] >= 0.75f)
-                {
-                    noise[x, z] = 0.75f;
-                }
-                */
                 verticies[i] = new Vector3(x, noise[x, z]*heightScale, z); //creates each vertex for the mesh giving it the current x and z value and the random y noise height
                 i++;
             }
