@@ -357,28 +357,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Xsize: 100
   Zsize: 100
-  worldLacunarity: 1.987
-  worldPersistance: 0.4983
-  worldOctaves: 4
-  zoom: 22
+  worldLacunarity: 2.212
+  worldPersistance: 0.789
+  worldOctaves: 5
+  zoom: 11.45
   heightScale: 10.5
   colourMap: []
   gradient:
     serializedVersion: 2
-    key0: {r: 1, g: 1, b: 1, a: 1}
-    key1: {r: 1, g: 1, b: 1, a: 1}
-    key2: {r: 0, g: 0, b: 0, a: 0}
-    key3: {r: 0, g: 0, b: 0, a: 0}
-    key4: {r: 0, g: 0, b: 0, a: 0}
-    key5: {r: 0, g: 0, b: 0, a: 0}
+    key0: {r: 0.19576532, g: 0.14684942, b: 0.9433962, a: 1}
+    key1: {r: 0.9811321, g: 0.89220816, b: 0.1342115, a: 1}
+    key2: {r: 0.23761432, g: 0.8113208, b: 0.17221434, a: 0}
+    key3: {r: 0.3773585, g: 0.25421524, b: 0.18333928, a: 0}
+    key4: {r: 0.20754719, g: 0.17468555, b: 0.15566039, a: 0}
+    key5: {r: 1, g: 1, b: 1, a: 0}
     key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 0
-    ctime1: 65535
-    ctime2: 0
-    ctime3: 0
-    ctime4: 0
-    ctime5: 0
+    ctime0: 11565
+    ctime1: 15227
+    ctime2: 27563
+    ctime3: 39707
+    ctime4: 55705
+    ctime5: 65535
     ctime6: 0
     ctime7: 0
     atime0: 0
@@ -390,7 +390,7 @@ MonoBehaviour:
     atime6: 0
     atime7: 0
     m_Mode: 0
-    m_NumColorKeys: 2
+    m_NumColorKeys: 6
     m_NumAlphaKeys: 2
 --- !u!23 &1538141923
 MeshRenderer:

@@ -46,17 +46,31 @@ public class WorldCreator : MonoBehaviour
     void makeMap()
     {
         mesh = new Mesh();
-        float[,] noise = NoiseGen.generateNoise(Xsize, Zsize, worldLacunarity, worldPersistance, worldOctaves, zoom);
+        float[,] noise = NoiseGen.generateNoise(Xsize, Zsize, worldLacunarity, worldPersistance, worldOctaves, zoom);   //creates noise map
+        for (int z=0;z<Zsize; z++)
+       {
+           for(int x=0; x<Xsize; x++)
+           {
+               if (noise[x,z] >= 0.7f){
+                   noise[x,z] = noise[x,z]+ (noise[x,z]*0.1f);
+               }
+               if(noise[x,z] <= 0.18f){
+                noise[x,z] = 0.175f;
+               }
+           }
+       }
 
+        mesh = MeshGen.generateMesh(Xsize, Zsize, noise, heightScale);  // creates mesh for terrain
+        
+       // transform.localScale = new Vector3(Xsize, 1, Zsize);
+        
+        
 
-
-        mesh = MeshGen.generateMesh(Xsize, Zsize, noise, heightScale);
-        transform.localScale = new Vector3(Xsize/10, 1, Zsize/10);
 
        
 
         colourMap = new Color[Xsize * Zsize];
-        for (int i = 0,z=0; z < Zsize; z++)
+        for (int i = 0,z=0; z < Zsize; z++) //for colouring mesh
         {
             for (int x = 0; x < Xsize; x++)
             {
