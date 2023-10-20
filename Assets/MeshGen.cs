@@ -15,7 +15,7 @@ public static class MeshGen
   //  public static float lacunarity, persistance;
    // private static int X, Z, octaves;
 
-    public static Mesh generateMesh(int Xsize, int Zsize, float[,] noise,float heightScale)
+    public static Mesh generateMesh(int Xsize, int Zsize, float[,] noise,float heightScale, AnimationCurve curve)
     {
         mesh = new Mesh();
         verticies = new Vector3[Xsize * Zsize];
@@ -32,7 +32,7 @@ public static class MeshGen
         {
             for (int x = 0; x < Xsize; x++)
             {
-                verticies[i] = new Vector3(x, noise[x, z]*heightScale, z); //creates each vertex for the mesh giving it the current x and z value and the random y noise height
+                verticies[i] = new Vector3(x, curve.Evaluate(noise[x, z])*heightScale, z); //creates each vertex for the mesh giving it the current x and z value and the random y noise height
                 i++;
             }
         }

@@ -6,7 +6,7 @@ public static class NoiseGen
 {
 
     public static float[,] Noise;
-    public static float[,] generateNoise(int xSize, int zSize, float lacunarity, float persistance, int octaves, float zoom)
+    public static float[,] generateNoise(int xSize, int zSize, float lacunarity, float persistance, int octaves, float zoom, float seed)
     {
 
         float[,] Noise = new float[xSize,zSize]; 
@@ -30,8 +30,8 @@ public static class NoiseGen
                 for (int i = 0; i < octaves; i++)   // loops to create each octave
                 {
                     
-                    float Xsample = x/ zoom * frequency;
-                    float Zsample = z/ zoom * frequency;
+                    float Xsample = x/ zoom * frequency + seed;
+                    float Zsample = z/ zoom * frequency + seed;
                     
                     
                     float Ysample = (Mathf.PerlinNoise(Xsample, Zsample)-0.5f);

@@ -16,8 +16,8 @@ public class WorldCreator : MonoBehaviour
     public float zoom;
     public float heightScale;
     public Color[] colourMap;
-  
-
+    public AnimationCurve smoothHeightCurve;
+    public float seed;
     public Gradient gradient;
 
 
@@ -46,21 +46,11 @@ public class WorldCreator : MonoBehaviour
     void makeMap()
     {
         mesh = new Mesh();
-        float[,] noise = NoiseGen.generateNoise(Xsize, Zsize, worldLacunarity, worldPersistance, worldOctaves, zoom);   //creates noise map
-        for (int z=0;z<Zsize; z++)
-       {
-           for(int x=0; x<Xsize; x++)
-           {
-               if (noise[x,z] >= 0.7f){
-                   noise[x,z] = noise[x,z]+ (noise[x,z]*0.1f);
-               }
-               if(noise[x,z] <= 0.18f){
-                noise[x,z] = 0.175f;
-               }
-           }
-       }
+        seed = Random.Range(0,100000);
+        float[,] noise = NoiseGen.generateNoise(Xsize, Zsize, worldLacunarity, worldPersistance, worldOctaves, zoom, seed);   //creates noise map
+        
 
-        mesh = MeshGen.generateMesh(Xsize, Zsize, noise, heightScale);  // creates mesh for terrain
+        mesh = MeshGen.generateMesh(Xsize, Zsize, noise, heightScale, smoothHeightCurve);  // creates mesh for terrain
         
        // transform.localScale = new Vector3(Xsize, 1, Zsize);
         
@@ -68,7 +58,7 @@ public class WorldCreator : MonoBehaviour
 
 
        
-
+        
         colourMap = new Color[Xsize * Zsize];
         for (int i = 0,z=0; z < Zsize; z++) //for colouring mesh
         {
@@ -78,7 +68,7 @@ public class WorldCreator : MonoBehaviour
                 i++;
             }
         }
-
+        
         
 
         GetComponent<MeshCollider>().convex = false;
