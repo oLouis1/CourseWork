@@ -5,44 +5,25 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private CharacterController movementController;
-    public float playerSpeed=5;
-    private Vector3 HorizontalDirection;
-    private Vector3 VerticalDirection;
-    public float jumpPower = 5;
-    public float gravity = -9.81f;
-    
-    public Collider Collider;
-    private bool onGround;
-
-    // Start is called before the first frame update
+    Rigidbody Rigidbody;
+    public float Thrust = 20f;
+    public bool onGround;
     void Start()
     {
-        movementController = gameObject.AddComponent<CharacterController>();
+        //gets the players rigidbody
+        Rigidbody = GetComponent<Rigidbody>();
     }
 
-    private void OnTriggerEnter(Collider collider){
-       onGround = true;
+    void OnCollisionEnter(Collision collision){
+        onGround = true;
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        onGround = movementController.isGrounded;
-
-        if(movementController.isGrounded && VerticalDirection.y<0){   //to stop the character from trying to move down when it hits the ground
-            VerticalDirection.y =0;
+        if (Input.GetButton("Jump") && onGround)
+        {
+            onGround = false;
+            Rigidbody.AddForce(transform.up * Thrust);
         }
-
-        HorizontalDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));   //for moving sideways and forwards
-
-
-        if(Input.GetButtonDown("Jump") && onGround){  //when player jumps
-            VerticalDirection.y += (jumpPower * -1f * gravity);
-        }
-        VerticalDirection.y += gravity * Time.deltaTime;
-
-        movementController.Move(VerticalDirection * Time.deltaTime);
-        movementController.Move(HorizontalDirection * playerSpeed * Time.deltaTime);
     }
 }
