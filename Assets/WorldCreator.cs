@@ -5,26 +5,40 @@ using UnityEditor;
 
 public class WorldCreator : MonoBehaviour
 {
-    Mesh mesh;
 
 
-    public int Xsize = 10;   //width and length for the mesh
-    public int Zsize = 10;
+    // variables for landscape--------
+    Mesh LandscapeMesh;
+    public int Xsize=5; 
+    public int Zsize=5;
     public float worldLacunarity = 1.5f;
-    public float worldPersistance = 0.5f;
+    public float worldPersistance = 0.5f;   
     public int worldOctaves = 3;
     public float zoom;
     public float heightScale;
-    public Color[] colourMap;
+    private Color[] colourMap;
     public AnimationCurve smoothHeightCurve;
-    public float seed;
+    private float seed;
     public Gradient gradient;
-
-
+    //------------------
+    private Transform water;
+    private MeshFilter waterFilter;
+    public AnimationCurve waterHeightCurve;
 
     // Start is called before the first frame update
     void Start()
     {
+        water = transform.Find("Water");
+        waterFilter = water.GetComponent<MeshFilter>();
+        float[,] waterHeights = new float[Xsize,Zsize];
+        for (int z = 0; z < Zsize; z++)    
+        {
+            for (int x = 0; x < Xsize; x++)
+            {
+                waterHeights[x, z] = Random.Range(0,1);
+            }
+        }
+        waterFilter.mesh = MeshGen.generateMesh(Xsize, Xsize, waterHeights, 1, waterHeightCurve);
 
         makeMap();
       
@@ -45,14 +59,14 @@ public class WorldCreator : MonoBehaviour
 
     void makeMap()
     {
-        mesh = new Mesh();
+        LandscapeMesh = new Mesh();
         seed = Random.Range(0,100000);
         float[,] noise = NoiseGen.generateNoise(Xsize, Zsize, worldLacunarity, worldPersistance, worldOctaves, zoom, seed);   //creates noise map
         
-
-        mesh = MeshGen.generateMesh(Xsize, Zsize, noise, heightScale, smoothHeightCurve);  // creates mesh for terrain
+        LandscapeMesh = MeshGen.generateMesh(Xsize, Zsize, noise, heightScale, smoothHeightCurve);  // creates mesh for terrain
         
        // transform.localScale = new Vector3(Xsize, 1, Zsize);
+        
         
         
 
@@ -72,9 +86,10 @@ public class WorldCreator : MonoBehaviour
         
 
         GetComponent<MeshCollider>().convex = false;
-        mesh.colors = colourMap;
-        GetComponent<MeshFilter>().mesh = mesh;
-        GetComponent<MeshCollider>().sharedMesh = mesh;
+        LandscapeMesh.colors = colourMap;
+
+        GetComponent<MeshFilter>().mesh = LandscapeMesh;
+        GetComponent<MeshCollider>().sharedMesh = LandscapeMesh;
     }
 
     
