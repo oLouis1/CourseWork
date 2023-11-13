@@ -5,27 +5,48 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 
-    float Xinput;
-    float Yinput;
-    Rigidbody rigidbody;
-    public float speed=10;
+    float Xinput;   //2D inputs and speed of player
+    float Zinput;
+    public float speed=3.5f;
+    public float jumpPower;
+    private bool onFloor;
+    private int jumpTicks;
+    public Rigidbody rb;
+    private Vector3 movementDirection;//direction player will move in based off which way there looking
 
-    private Vector3 movementDirection;
-    // Start is called before the first frame update
-    void Start()
+     void Start()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
+    void OnCollisionEnter(Collision collision){
+        onFloor = true;
+        Debug.Log("touched floor");
+        
+    }
+
+
     void FixedUpdate()
-    {
-        Xinput = Input.GetAxis("Horizontal");
-        Yinput = Input.GetAxis("Vertical");
+    {   
 
-        movementDirection = transform.forward * Yinput + transform.right * Xinput;
 
-        rigidbody.AddForce(movementDirection * speed * 10f, ForceMode.Force);
+        //for floor movement---------
+        Xinput = Input.GetAxis("Horizontal");   //gets X and Z inputs
+        Zinput = Input.GetAxis("Vertical");
+        movementDirection = transform.forward * Zinput + transform.right * Xinput;
+
+        if(movementDirection.magnitude != 0){
+            transform.position+=movementDirection * speed;
+        }
+        //-----------------------------
+        //jumping
+
+        if(Input.GetKeyDown("space")){
+            Debug.Log("Jumped");
+            rb.AddForce(transform.up * jumpPower, ForceMode.Impulse);
+        }
+
+       
         
     }
 }
