@@ -14,6 +14,8 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody rb;
     private Vector3 movementDirection;//direction player will move in based off which way there looking
 
+
+   
      void Start()
     {
         rb = GetComponent<Rigidbody>();
