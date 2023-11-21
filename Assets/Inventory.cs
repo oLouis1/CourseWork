@@ -14,6 +14,7 @@ public class Inventory : MonoBehaviour
     void Start()
     {
         items = new Item[20];   //ammount of items in the inventory.
+        inventory.SetActive(false);
     }
 
     // Update is called once per frame
@@ -26,13 +27,18 @@ public class Inventory : MonoBehaviour
             if (inventory.activeSelf)
             {
                 inventory.SetActive(false);
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
             }
             else
             {
                 inventory.SetActive(true);
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
             }
             
         }
+
     }
 
     void openInventory()

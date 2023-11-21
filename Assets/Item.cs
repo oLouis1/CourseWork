@@ -1,9 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class Item : MonoBehaviour
+using UnityEngine.EventSystems;
+public class Item : MonoBehaviour, IDragHandler
 {
     public string itemName;
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        //moves item to mouse position
+        transform.position = eventData.position;
+    }
 
 }
