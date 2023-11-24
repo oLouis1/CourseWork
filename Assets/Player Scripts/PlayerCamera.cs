@@ -8,7 +8,7 @@ public class PlayerCamera : MonoBehaviour
     float totalXRotation=0;
     float totalYRotation=0;
 
-    int sensitivity=50;
+    public int sensitivity=50;
 
     public Transform playerTransform;
     private Vector3 cameraOffset;
@@ -40,4 +40,5 @@ public class PlayerCamera : MonoBehaviour
         transform.rotation = Quaternion.Euler(totalYRotation, totalXRotation, 0); //rotates the camera
         playerTransform.rotation = Quaternion.Euler(0, totalXRotation, 0);
     }
+  
 }

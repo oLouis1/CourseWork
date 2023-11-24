@@ -2,19 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerManager : MonoBehaviour
 {
 
+    //movement variables
     float Xinput;   //2D inputs and speed of player
     float Zinput;
-    public float speed=3.5f;
+    
     public float jumpPower;
     private bool onFloor;
     private int jumpTicks;
     public Rigidbody rb;
     private Vector3 movementDirection;//direction player will move in based off which way there looking
 
-
+    //player stats variables
+    public float speed=3.5f;
+    public float health = 20;
    
      void Start()
     {
