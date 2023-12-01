@@ -5,8 +5,13 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 public class Item : MonoBehaviour, IDragHandler, IEndDragHandler
 {
+    public bool IsHeld;
+
+
     public string itemName;
 
+
+    //for inventory drag and drop
     private Transform parentTransform;
     private Transform GrandParentTransfrom;
 
