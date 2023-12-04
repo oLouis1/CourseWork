@@ -25,7 +25,8 @@ public class PlayerManager : MonoBehaviour
      void Start()
     {
         rb = GetComponent<Rigidbody>();
-
+        heldItem = Instantiate(heldItem, transform.position, transform.rotation);
+        
     }
 
     void OnCollisionEnter(Collision collision){
@@ -42,6 +43,10 @@ public class PlayerManager : MonoBehaviour
     void FixedUpdate()
     {   
         
+
+        heldItem.transform.position = transform.position + new Vector3(30, 0, 30);
+
+
 
         //for floor movement---------
         Xinput = Input.GetAxis("Horizontal");   //gets X and Z inputs
@@ -63,6 +68,12 @@ public class PlayerManager : MonoBehaviour
             onFloor = false;
             rb.AddForce(transform.up * jumpPower, ForceMode.Impulse);
         }
+
+        if(Input.GetKeyDown(KeyCode.L)){
+            Time.timeScale = 0;
+        }
+
+        //if()
 
        
         
