@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -19,13 +20,15 @@ public class PlayerManager : MonoBehaviour
     //player stats variables
     public float speed=3.5f;
     public float health = 20;
-    public Image healthBar;
+    public UnityEngine.UI.Image healthBar;
     public GameObject heldItem;
-   
+    public Vector3 itemOffset; 
+    private bool attacking=false;
+    private int attackingTickCounter=20;
      void Start()
     {
         rb = GetComponent<Rigidbody>();
-        heldItem = Instantiate(heldItem, transform.position, transform.rotation);
+        heldItem = Instantiate(heldItem, transform);
         
     }
 
@@ -44,8 +47,16 @@ public class PlayerManager : MonoBehaviour
     {   
         
 
-        heldItem.transform.position = transform.position + new Vector3(30, 0, 30);
-
+        heldItem.transform.position = transform.position + itemOffset;
+        if(attacking && attackingTickCounter > 0){
+            heldItem.transform.Rotate(5,0,0);
+            attackingTickCounter--;
+            if(attackingTickCounter==0){
+                heldItem.transform.Rotate(-5*20f,0,0);
+                attackingTickCounter=20;
+                attacking=false;
+            }
+        }
 
 
         //for floor movement---------
@@ -57,7 +68,7 @@ public class PlayerManager : MonoBehaviour
             transform.position+=movementDirection * speed;
         }
         //-----------------------------
-        //jumping
+        //input
 
         if(Input.GetKeyDown(KeyCode.T)){
             receivedDamage(1);
@@ -73,7 +84,11 @@ public class PlayerManager : MonoBehaviour
             Time.timeScale = 0;
         }
 
-        //if()
+        if(Input.GetMouseButtonDown(0) && attacking==false){
+            attacking = true;
+            Debug.Log("clicking");
+           
+        }
 
        
         
