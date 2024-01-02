@@ -21,6 +21,7 @@ public class PlayerManager : MonoBehaviour
     public float speed=3.5f;
     public float health = 20;
     public UnityEngine.UI.Image healthBar;
+    private float healthBarWidth;
     public GameObject heldItem;
     public Vector3 itemOffset; 
     private bool attacking=false;
@@ -29,7 +30,7 @@ public class PlayerManager : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         heldItem = Instantiate(heldItem, transform);
-        
+        healthBarWidth = healthBar.rectTransform.rect.width;
     }
 
     void OnCollisionEnter(Collision collision){
@@ -40,14 +41,30 @@ public class PlayerManager : MonoBehaviour
 
     void receivedDamage(float damage){
         health = health - damage;
-        healthBar.transform.localScale = healthBar.transform.localScale + (new Vector3(-0.05f,0,0));
+        if(health == 0)
+        {
+            Color transparent = healthBar.color;    //hides healthbar when health is 0
+            transparent.a = 0f;                     //will also be used to end game
+            healthBar.color = transparent;
+        }
+        else
+        {
+            Vector2 currentHealthBarSize = healthBar.rectTransform.sizeDelta;
+            float newWidth = Mathf.Max(0, currentHealthBarSize.x - healthBarWidth/20f);
+            healthBar.rectTransform.sizeDelta = new Vector2(newWidth, currentHealthBarSize.y);
+            healthBar.rectTransform.pivot = new Vector2(0f, 0.5f);
+            healthBar.rectTransform.anchorMin = new Vector2(0f, 1f);
+            healthBar.rectTransform.anchorMax = new Vector2(0f, 1f);
+            healthBar.rectTransform.anchoredPosition = new Vector2(0f,1f);
+        }
+        
     }
 
     void FixedUpdate()
     {   
         
-
-        heldItem.transform.position = transform.position + itemOffset;
+        //moving sword when attacking
+       // heldItem.transform.position = transform.position + itemOffset;
         if(attacking && attackingTickCounter > 0){
             heldItem.transform.Rotate(5,0,0);
             attackingTickCounter--;

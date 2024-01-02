@@ -22,7 +22,7 @@ public class Inventory : MonoBehaviour
     {
         //cameraTransform.position = transform.position + offset; //keep the inventory infront of the camera.
 
-        if (Input.GetKeyDown(KeyCode.Q))//opening the invetory
+        if (Input.GetKeyDown(KeyCode.Q))//opening and closing the invetory
         {
             if (inventory.activeSelf)
             {

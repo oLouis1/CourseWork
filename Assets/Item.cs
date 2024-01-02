@@ -6,8 +6,8 @@ using UnityEngine.EventSystems;
 public class Item : MonoBehaviour, IDragHandler, IEndDragHandler
 {
     public bool IsHeld;
-
-
+    public Camera playerCamera;
+    public GameObject itemModel;
     public string itemName;
 
 
@@ -33,7 +33,7 @@ public class Item : MonoBehaviour, IDragHandler, IEndDragHandler
         float SmallestDistanceFromItem = float.MaxValue;    //this will be used to find which slot is closest to the item when its no longer being dragged
         Transform closestSlot = null;                       //This means we can snap the item to the closest slot.
 
-        for (int i=1; i<GrandParentTransfrom.childCount-1; i++){
+        for (int i=0; i<GrandParentTransfrom.childCount-1; i++){
 
             Transform currentInventorySlot = GrandParentTransfrom.GetChild(i);
             float currentDistance = Vector3.Distance(transform.position, currentInventorySlot.transform.position);
@@ -46,10 +46,16 @@ public class Item : MonoBehaviour, IDragHandler, IEndDragHandler
         transform.position = closestSlot.transform.position + new Vector3(0,0,1);
         transform.parent=closestSlot;
 
-
-
-
-
     }
-
+    public void Update()
+    {
+        /*
+        if (IsHeld)
+        {
+            transform.position
+        }
+        */
+    }
 }
+
+
