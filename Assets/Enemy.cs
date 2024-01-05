@@ -5,17 +5,39 @@ using UnityEngine.AI;
 public class Enemy : MonoBehaviour
 {
     public Transform playerTarget;
-    private NavMeshAgent enemyAI;
+    
+    public float[,] pointCosts; //this is the height of each point higher points have higher cost and low points will need to be ignored.
+
+    struct node {
+        
+    }
+
+
 
     // Start is called before the first frame update
     void Start()
     {
-        enemyAI = GetComponent<NavMeshAgent>();
+        
     }
 
     // Update is called once per frame\
     void Update()
     {
-        enemyAI.SetDestination(playerTarget.position);
+        if(pointCosts == null){ //assigns the worlds noiseMap/heigh of points to the cost array. this isnt done in start because the worlds noisemap is generated in start.
+            pointCosts = NoiseGen.Noise;
+        }
+
+
+        //need to calculate the point the player is on  
+        //need to find point itself is on
+        //use A* algorithm to move from current point to player point
+        //despawn enemy if too far away
+        float distanceFromPlayer = Vector3.Distance(playerTarget.position, transform.position);
+        if(distanceFromPlayer) > 
+
+        int playerX =(int)Mathf.Round(playerTarget.position.x);
+        int playerZ = (int)Mathf.Round(playerTarget.position.z);
+
+
     }
 }
