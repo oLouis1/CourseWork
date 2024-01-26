@@ -8,9 +8,7 @@ public class Enemy : MonoBehaviour
     
     public float[,] pointCosts; //this is the height of each point higher points have higher cost and low points will need to be ignored.
 
-    struct node {
-        
-    }
+  
 
 
 
@@ -33,11 +31,13 @@ public class Enemy : MonoBehaviour
         //use A* algorithm to move from current point to player point
         //despawn enemy if too far away
         float distanceFromPlayer = Vector3.Distance(playerTarget.position, transform.position);
-        if(distanceFromPlayer) > 
+        if (distanceFromPlayer > 1000)
+        { Destroy(this);}
 
-        int playerX =(int)Mathf.Round(playerTarget.position.x);
+        int playerX = (int)Mathf.Round(playerTarget.position.x);
         int playerZ = (int)Mathf.Round(playerTarget.position.z);
 
-
     }
+
+    
 }
