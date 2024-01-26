@@ -88,7 +88,9 @@ public class PlayerManager : MonoBehaviour
         //input
 
         if(Input.GetKeyDown(KeyCode.T)){
-            receivedDamage(1);
+            node playerNode = new node();
+            playerNode.position = transform.position;
+            playerNode.findNodeNeighbours(playerNode);
         }
 
         if(Input.GetKey("space") && onFloor){

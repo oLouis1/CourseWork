@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -9,8 +9,8 @@ public class WorldCreator : MonoBehaviour
 
     // variables for landscape--------
     Mesh LandscapeMesh;
-    public int Xsize=5; 
-    public int Zsize=5;
+    public int Xsize; 
+    public int Zsize;
     public float worldLacunarity = 1.5f;
     public float worldPersistance = 0.5f;   
     public int worldOctaves = 3;
@@ -64,14 +64,7 @@ public class WorldCreator : MonoBehaviour
         float[,] noise = NoiseGen.generateNoise(Xsize, Zsize, worldLacunarity, worldPersistance, worldOctaves, zoom, seed);   //creates noise map
         
         LandscapeMesh = MeshGen.generateMesh(Xsize, Zsize, noise, heightScale, smoothHeightCurve);  // creates mesh for terrain
-        
-       // transform.localScale = new Vector3(Xsize, 1, Zsize);
-        
-        
-        
 
-
-       
         
         colourMap = new Color[Xsize * Zsize];
         for (int i = 0,z=0; z < Zsize; z++) //for colouring mesh
