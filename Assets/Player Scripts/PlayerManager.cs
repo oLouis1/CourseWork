@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class PlayerManager : MonoBehaviour
     private int jumpTicks;
     public Rigidbody rb;
     private Vector3 movementDirection;//direction player will move in based off which way there looking
-
+    public Transform enemyPostion;
     //player stats variables
     public float speed=3.5f;
     public float health = 20;
@@ -26,11 +27,16 @@ public class PlayerManager : MonoBehaviour
     public Vector3 itemOffset; 
     private bool attacking=false;
     private int attackingTickCounter=20;
+    public Text scoreText;
+    private int score;
+    private int scoreTimer;
      void Start()
     {
         rb = GetComponent<Rigidbody>();
         heldItem = Instantiate(heldItem, transform);
         healthBarWidth = healthBar.rectTransform.rect.width;
+        score = 0;
+        scoreTimer = 100;
     }
 
     void OnCollisionEnter(Collision collision){
@@ -39,7 +45,7 @@ public class PlayerManager : MonoBehaviour
         
     }
 
-    void receivedDamage(float damage){
+    public void receivedDamage(float damage){
         health = health - damage;
         if(health == 0)
         {
@@ -74,6 +80,14 @@ public class PlayerManager : MonoBehaviour
                 attacking=false;
             }
         }
+        //handling Score counter
+        scoreText.text = "Score: " + score;
+        scoreTimer -= 1;
+        if (scoreTimer == 0)
+        {
+            scoreTimer = 100;
+            score += 1;
+        }
 
 
         //for floor movement---------
@@ -88,9 +102,7 @@ public class PlayerManager : MonoBehaviour
         //input
 
         if(Input.GetKeyDown(KeyCode.T)){
-            node playerNode = new node();
-            playerNode.position = transform.position;
-            playerNode.findNodeNeighbours(playerNode);
+            
         }
 
         if(Input.GetKey("space") && onFloor){
@@ -107,6 +119,14 @@ public class PlayerManager : MonoBehaviour
             attacking = true;
             Debug.Log("clicking");
            
+        }
+
+        if (health == 0)
+        {
+            UnityEngine.Cursor.lockState = CursorLockMode.None;
+            UnityEngine.Cursor.visible = true;
+            SceneManager.LoadScene(0);
+            
         }
 
        

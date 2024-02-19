@@ -5,12 +5,8 @@ using UnityEngine.AI;
 public class Enemy : MonoBehaviour
 {
     public Transform playerTarget;
-    
-    public float[,] pointCosts; //this is the height of each point higher points have higher cost and low points will need to be ignored.
-
-  
-
-
+    private int attackTimer=75;
+    public PlayerManager player;
 
     // Start is called before the first frame update
     void Start()
@@ -18,25 +14,35 @@ public class Enemy : MonoBehaviour
         
     }
 
-    // Update is called once per frame\
-    void Update()
+    
+    // Update is called once per frame
+    void FixedUpdate()
     {
-        if(pointCosts == null){ //assigns the worlds noiseMap/heigh of points to the cost array. this isnt done in start because the worlds noisemap is generated in start.
-            pointCosts = NoiseGen.Noise;
+        //moving to the player and making enemy face the player
+        Vector3 enemyToPlayer = playerTarget.position - transform.position;
+        
+        Vector3 velocity = enemyToPlayer.normalized;
+        Debug.Log(velocity);
+       
+        transform.rotation = Quaternion.LookRotation(velocity);
+
+        transform.position += velocity;
+
+
+        //attacking the player
+        if (attackTimer > 0)
+        {
+            attackTimer -= 1;
         }
-
-
-        //need to calculate the point the player is on  
-        //need to find point itself is on
-        //use A* algorithm to move from current point to player point
-        //despawn enemy if too far away
-        float distanceFromPlayer = Vector3.Distance(playerTarget.position, transform.position);
-        if (distanceFromPlayer > 1000)
-        { Destroy(this);}
-
-        int playerX = (int)Mathf.Round(playerTarget.position.x);
-        int playerZ = (int)Mathf.Round(playerTarget.position.z);
-
+        if (enemyToPlayer.magnitude < 200)
+        {
+            if (attackTimer == 0)
+            {
+                player.receivedDamage(1);
+                attackTimer = 75;
+            }
+            
+        }
     }
 
     
