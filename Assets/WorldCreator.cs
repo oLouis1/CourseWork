@@ -33,13 +33,9 @@ public class WorldCreator : MonoBehaviour
     public void Start()
     {
         World.worldCreator = this;
+        seed = World.worldSeed;
         LandscapeMeshFilter = GetComponent<MeshFilter>();
         makeMap();
-    }
-
-    public void setSeed(float pSeed)
-    {
-        seed = pSeed;
     }
 
     // Start is called before the first frame update
@@ -56,7 +52,18 @@ public class WorldCreator : MonoBehaviour
 
    private void makeTreeCluster(Vector3 startPoint) //for making a cluster of trees around a certain point
     {
+        bool makeTrees = true;
 
+        while (makeTrees)
+        {
+            Instantiate(treePrefab, new Vector3(startPoint.x + Random.Range(0,150), startPoint.y, startPoint.z + Random.Range(0,150)), Quaternion.identity);
+            if (Random.Range(1,11) < 8)
+            {
+                makeTrees = false;
+            }
+            
+        }
+        
     }
 
     public void makeMap()
@@ -73,7 +80,6 @@ public class WorldCreator : MonoBehaviour
             }
         }
         waterFilter.mesh = MeshGen.generateMesh(Xsize, Xsize, waterHeights, 1, waterHeightCurve);
-
 
         //making land
         LandscapeMesh = new Mesh();
@@ -95,33 +101,29 @@ public class WorldCreator : MonoBehaviour
         //adding land details
         Vector3[] worldPoints = LandscapeMesh.vertices;
         bool[] isResourceOnPoint = new bool[worldPoints.Length]; //tracking if a tree/ore vein has already been made on a point
-       // Debug.Log(worldPoints.Length);
-       // Debug.Log(isResourceOnPoint.Length);
-        for(int i = 0; i<worldPoints.Length; i += 100)
+       
+        for(int i = 0; i<worldPoints.Length; i += 1)
         {
             Vector3 currentPoint = worldPoints[i];
+            Debug.Log(currentPoint);
             currentPoint.x *= 30;
             currentPoint.z *= 30;
             //Debug.Log(currentPoint);
-            if (!isResourceOnPoint[i])
+            if (!isResourceOnPoint[i] && currentPoint.y>35) //if no resoruce on point create a tree and if above water
             {
-                Instantiate(treePrefab, currentPoint, Quaternion.identity);   //if no resoruce on point create a tree
+                if (Random.Range(1, 1001) > 997) // 0.1% of spawning a tree cluster
+                {
+                    makeTreeCluster(currentPoint);   
+                }
                 isResourceOnPoint[i] = true;
             }
-            
-
         }
 
-        
         //assigning mesh values
         GetComponent<MeshCollider>().convex = false;
         LandscapeMesh.colors = colourMap;
-
         LandscapeMeshFilter.mesh = LandscapeMesh;
-        
         GetComponent<MeshCollider>().sharedMesh = LandscapeMesh;
     }
-
-    
 
 }

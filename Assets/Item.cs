@@ -26,9 +26,6 @@ public class Item : MonoBehaviour, IDragHandler, IEndDragHandler
         transform.parent = GrandParentTransfrom; //unlinks the item from its parent so it doesnt go behind other inventory slots during dragging
     }
     public void OnEndDrag(PointerEventData eventData){
-      
-
-        
 
         float SmallestDistanceFromItem = float.MaxValue;    //this will be used to find which slot is closest to the item when its no longer being dragged
         Transform closestSlot = null;                       //This means we can snap the item to the closest slot.

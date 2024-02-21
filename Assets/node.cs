@@ -121,12 +121,10 @@ public class node {
                 neighbour.setCosts(target, currentNode);
                 open.Add(neighbour);
             }
-           
 
         }
         if (found)
         {
-
             List<Vector3> path = new List<Vector3>();   //backtracks through the parent nodes to get the final path
             path.Add(currentNode.position);
             while(currentNode.parent != null)
@@ -135,8 +133,7 @@ public class node {
             }
             path.Reverse();
             return path;
-
-            
+ 
         }
         return null;
     }

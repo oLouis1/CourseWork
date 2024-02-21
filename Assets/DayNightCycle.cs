@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class DayNightCycle : MonoBehaviour
 {
-    
 
-    // Update is called once per frame
     void Update()
     {
         transform.Rotate(0, 0.02f, 1);

@@ -74,6 +74,8 @@ public class PlayerManager : MonoBehaviour
         if(attacking && attackingTickCounter > 0){
             heldItem.transform.Rotate(5,0,0);
             attackingTickCounter--;
+            
+
             if(attackingTickCounter==0){
                 heldItem.transform.Rotate(-5*20f,0,0);
                 attackingTickCounter=20;

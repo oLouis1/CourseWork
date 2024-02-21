@@ -10,7 +10,7 @@ public class MainMenu : MonoBehaviour
     {
         
         SceneManager.LoadScene(1); //loads  the scene of the main game world
-       
+        World.worldSeed = Random.Range(0, 100000);       
         
     }
 }

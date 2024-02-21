@@ -22,7 +22,7 @@ public class Enemy : MonoBehaviour
         Vector3 enemyToPlayer = playerTarget.position - transform.position;
         
         Vector3 velocity = enemyToPlayer.normalized;
-        Debug.Log(velocity);
+        
        
         transform.rotation = Quaternion.LookRotation(velocity);
 
