@@ -105,10 +105,10 @@ public class WorldCreator : MonoBehaviour
         for(int i = 0; i<worldPoints.Length; i += 1)
         {
             Vector3 currentPoint = worldPoints[i];
-            Debug.Log(currentPoint);
+            
             currentPoint.x *= 30;
             currentPoint.z *= 30;
-            //Debug.Log(currentPoint);
+            
             if (!isResourceOnPoint[i] && currentPoint.y>35) //if no resoruce on point create a tree and if above water
             {
                 if (Random.Range(1, 1001) > 997) // 0.1% of spawning a tree cluster

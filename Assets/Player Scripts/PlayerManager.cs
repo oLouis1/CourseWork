@@ -14,7 +14,7 @@ public class PlayerManager : MonoBehaviour
     
     public float jumpPower;
     private bool onFloor;
-    private int jumpTicks;
+    
     public Rigidbody rb;
     private Vector3 movementDirection;//direction player will move in based off which way there looking
     public Transform enemyPostion;
@@ -25,7 +25,7 @@ public class PlayerManager : MonoBehaviour
     private float healthBarWidth;
     public GameObject heldItem;
     public Vector3 itemOffset; 
-    private bool attacking=false;
+    public bool attacking=false;
     private int attackingTickCounter=20;
     public Text scoreText;
     private int score;
@@ -36,12 +36,12 @@ public class PlayerManager : MonoBehaviour
         heldItem = Instantiate(heldItem, transform);
         healthBarWidth = healthBar.rectTransform.rect.width;
         score = 0;
-        scoreTimer = 100;
+        scoreTimer = 50;
     }
 
     void OnCollisionEnter(Collision collision){
         onFloor = true;
-        Debug.Log("touched floor");
+       
         
     }
 
@@ -55,8 +55,16 @@ public class PlayerManager : MonoBehaviour
         }
         else
         {
+            float newWidth;
             Vector2 currentHealthBarSize = healthBar.rectTransform.sizeDelta;
-            float newWidth = Mathf.Max(0, currentHealthBarSize.x - healthBarWidth/20f);
+            if (damage < 0)
+            {
+                 newWidth = Mathf.Max(0, currentHealthBarSize.x + healthBarWidth / 20f);   //if damage less than zero than player is being healed so make bar bigger
+            }
+            else
+            {
+                 newWidth = Mathf.Max(0, currentHealthBarSize.x - healthBarWidth / 20f);
+            }
             healthBar.rectTransform.sizeDelta = new Vector2(newWidth, currentHealthBarSize.y);
             healthBar.rectTransform.pivot = new Vector2(0f, 0.5f);
             healthBar.rectTransform.anchorMin = new Vector2(0f, 1f);
@@ -108,7 +116,7 @@ public class PlayerManager : MonoBehaviour
         }
 
         if(Input.GetKey("space") && onFloor){
-            Debug.Log("Jumped");
+            
             onFloor = false;
             rb.AddForce(transform.up * jumpPower, ForceMode.Impulse);
         }
